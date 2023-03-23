@@ -1,5 +1,4 @@
 const http = require("http");
-const axios = require("axios");
 const fs = require("fs");
 
 const host = "localhost";
@@ -14,17 +13,28 @@ const requestListener = (req, res) => {
     "Access-Control-Allow-Headers": "*",
   };
 
-  if (req.method === "GET" && req.url === "/getUsers") {
-    res.writeHead(200, headers);
+  // if (req.method === "GET" && req.url === "/getUsers") {
+  //   res.writeHead(200, headers);
 
-    axios
-      .get(`https://dummyjson.com/users`)
-      .then((data) => {
-        res.write(JSON.stringify(data.data.users));
-        res.end();
-      })
-      .catch((err) => console.log(err));
-  } else if (req.method === "POST" && req.url === "/addUsers") {
+  //   axios
+  //     .get(`https://dummyjson.com/users`)
+  //     .then((data) => {
+  //       res.write(JSON.stringify(data.data.users));
+  //       fs.writeFile(
+  //         "UserData.txt",
+  //         JSON.stringify(data.data.users),
+  //         (err, data) => {
+  //           if (err) {
+  //             throw err;
+  //           } else {
+  //           }
+  //         }
+  //       );
+  //       res.end();
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
+  if (req.method === "POST" && req.url === "/addUsers") {
     res.writeHead(201, headers);
     let body = "";
     req.on("data", (chunk) => {
@@ -45,12 +55,12 @@ const requestListener = (req, res) => {
       res.write(JSON.stringify({ message: "User created successfully" }));
       res.end();
     });
-  } else if (req.method === "GET" && req.url === "/addFormUsers") {
+  } else if (req.method === "GET" && req.url === "/getFormUsers") {
     fs.readFile("UserData.txt", "utf8", (err, data) => {
       if (err) {
         res.writeHead(404, headers);
         throw err;
-      } else if (data) {
+      } else {
         res.writeHead(200, headers);
         res.write(data);
         res.end();
