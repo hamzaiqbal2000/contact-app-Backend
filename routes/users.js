@@ -3,29 +3,6 @@ const fs = require("fs");
 const router = express.Router();
 const verifyToken = require("../middlewares/auth");
 
-// const users = [];
-
-/* GET users listing. */
-// router.get("/getUsers", (req, res) => {
-//   axios
-//     .get(`https://dummyjson.com/users`)
-//     .then((data) => {
-//       res.write(JSON.stringify(data.data.users));
-//       fs.writeFile(
-//         "UserData.txt",
-//         JSON.stringify(data.data.users),
-//         (err, data) => {
-//           if (err) {
-//             throw err;
-//           } else {
-//           }
-//         }
-//       );
-//       res.end();
-//     })
-//     .catch((err) => console.log(err));
-// });
-
 router.post("/addUsers", (req, res) => {
   const objData = req.body;
   console.log({ objData });
@@ -35,7 +12,8 @@ router.post("/addUsers", (req, res) => {
       throw err;
     } else if (data) {
       const users = JSON.parse(data);
-      users.push(objData);
+      const id = users.length + 2;
+      users.push({ ...objData, id });
       fs.writeFile("UserData.txt", JSON.stringify(users), (err) => {
         if (err) {
           console.log("err", err);
@@ -48,7 +26,7 @@ router.post("/addUsers", (req, res) => {
   });
 });
 
-router.get("/getUsers", verifyToken, (req, res) => {
+router.get("/getUsers", (req, res) => {
   fs.readFile("UserData.txt", "utf8", (err, data) => {
     if (err) {
       throw err;
